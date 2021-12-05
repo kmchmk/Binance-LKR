@@ -1,0 +1,24 @@
+{
+  "name": "Binance-LKR",
+  "version": "1.0.0",
+  "description": "All coin values in LKR charts",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kmchmk/Binance-LKR.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kmchmk/Binance-LKR/issues"
+  },
+  "homepage": "https://github.com/kmchmk/Binance-LKR#readme",
+  "dependencies": {
+    "dotenv": "^10.0.0"
+  }
+}
