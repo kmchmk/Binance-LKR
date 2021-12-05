@@ -10,8 +10,8 @@ dotenv.config();
 const port = process.env.PORT;
 
 
-function get_btc_usdt_price() {
-  var res = sync_request('GET', 'https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT');
+function get_usdt_price(symbol) {
+  var res = sync_request('GET', 'https://api.binance.com/api/v3/ticker/price?symbol=' + symbol + 'USDT');
   return JSON.parse(res.getBody()).price;
 }
 
@@ -37,8 +37,11 @@ function get_part(num, size) {
 }
 
 const server = http.createServer((req, res) => {
-  price = get_btc_usdt_price() * get_usdt_lkr_price()
-  text = get_part(price, 1000000) + " million " + get_part(price, 1000) + " thousand " + parseInt(price) % 1000 + " LKR"
+  usdt_lkr = get_usdt_lkr_price()
+  btc_price = get_usdt_price("BTC") * usdt_lkr
+  eth_price = get_usdt_price("ETH") * usdt_lkr
+  text = "1 BTC = " + get_part(btc_price, 1000000) + " million " + get_part(btc_price, 1000) + " thousand " + parseInt(btc_price) % 1000 + " LKR"
+  text += "\n1 ETH = " + get_part(eth_price, 1000000) + " million " + get_part(eth_price, 1000) + " thousand " + parseInt(eth_price) % 1000 + " LKR"
 
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/plain');
