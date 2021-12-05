@@ -19,6 +19,8 @@
   },
   "homepage": "https://github.com/kmchmk/Binance-LKR#readme",
   "dependencies": {
-    "dotenv": "^10.0.0"
+    "dotenv": "^10.0.0",
+    "request": "^2.88.2",
+    "sync-request": "^6.1.0"
   }
 }

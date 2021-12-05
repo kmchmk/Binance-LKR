@@ -1,2 +1,2 @@
 # Binance-LKR
-All coin values in LKR charts
+Bitcoin value in LKR.
