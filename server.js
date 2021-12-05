@@ -4,6 +4,7 @@ const https = require('https')
 const dotenv = require('dotenv');
 const request = require('request');
 const sync_request = require('sync-request');
+const database = require("./database");
 dotenv.config();
 
 // const hostname = process.env.HOST_NAME =! undefined ? process.env.HOST_NAME :`${process.env.PROJECT_DOMAIN}.glitch.me`
@@ -32,6 +33,18 @@ function get_usdt_lkr_price() {
   return JSON.parse(res.getBody()).data[0].adv.price
 }
 
+database.create_table()
+
+function run_forever() {
+  usdt_lkr = get_usdt_lkr_price()
+  btc_price = get_usdt_price("BTC") * usdt_lkr
+  database.insert_current_price("BTC", btc_price)
+  eth_price = get_usdt_price("ETH") * usdt_lkr
+  database.insert_current_price("ETH", eth_price)
+  setTimeout(() => { run_forever() }, 60);
+}
+run_forever()
+
 function get_part(num, size) {
   return (parseInt(num / size) % size)
 }
@@ -40,8 +53,15 @@ const server = http.createServer((req, res) => {
   usdt_lkr = get_usdt_lkr_price()
   btc_price = get_usdt_price("BTC") * usdt_lkr
   eth_price = get_usdt_price("ETH") * usdt_lkr
-  text = "1 BTC = " + get_part(btc_price, 1000000) + " million " + get_part(btc_price, 1000) + " thousand " + parseInt(btc_price) % 1000 + " LKR"
+
+  text = "Current price:"
+  text += "\n1 BTC = " + get_part(btc_price, 1000000) + " million " + get_part(btc_price, 1000) + " thousand " + parseInt(btc_price) % 1000 + " LKR"
   text += "\n1 ETH = " + get_part(eth_price, 1000000) + " million " + get_part(eth_price, 1000) + " thousand " + parseInt(eth_price) % 1000 + " LKR"
+
+  text += "\n\nHistory:"
+  database.get_history().forEach(row => {
+    text += "\n" + row.symbol + " " + row.price + " " + row.time
+  });
 
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/plain');
